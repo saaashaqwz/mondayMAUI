@@ -39,5 +39,52 @@ namespace MauiApp4.ViewModel
 
 
         }
+
+        [ObservableProperty]
+        private bool _isModalVisible;
+        [ObservableProperty]
+        private NContact _editingContact;
+
+        [RelayCommand]
+        private void EditContact(NContact contact)
+        {
+            if(contact is not null)
+            {
+                EditingContact = new NContact(contact.Name,
+                    contact.Phone,
+                    contact.Email,
+                    contact.Icon);
+
+                IsModalVisible = true;
+            }
+        }
+
+        [RelayCommand]
+        private void SaveContact()
+        {
+            if(EditingContact != null && SelectedContact !=null)
+            {
+                var index = Contacts.IndexOf(SelectedContact);
+                if(index >= 0)
+                {
+                    Contacts[index] = new NContact
+                        (
+                            EditingContact.Name,
+                            EditingContact.Phone,
+                            EditingContact.Email,
+                            EditingContact.Icon
+                        );
+                }
+                CloseModal();
+            }
+        }
+
+        [RelayCommand]
+        private void CloseModal()
+        {
+            IsModalVisible = false;
+            EditingContact = null;
+        }
+
     }
 }
